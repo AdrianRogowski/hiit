@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;900&family=Outfit:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #0D0D0D;
+  --color-surface: #1A1A1A;
+  --color-surface-elevated: #262626;
+  --color-work: #FF6B35;
+  --color-work-glow: rgba(255, 107, 53, 0.3);
+  --color-rest: #00D9A5;
+  --color-rest-glow: rgba(0, 217, 165, 0.3);
+  --color-paused: #FFD166;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A0A0A0;
+  --color-error: #EF4444;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+  }
+
+  body {
+    font-family: 'Outfit', 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  .font-body {
+    font-family: 'Outfit', 'DM Sans', sans-serif;
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-primary);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-work);
+  color: white;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-work);
+  outline-offset: 2px;
+}
+
+/* Prevent text selection on timer */
+.timer-display {
+  user-select: none;
+  -webkit-user-select: none;
+}
