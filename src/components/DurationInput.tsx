@@ -10,6 +10,7 @@ export interface DurationInputProps {
 
 /**
  * Duration input with minutes and seconds fields
+ * Compact layout with +/- buttons stacked vertically
  */
 export function DurationInput({
   label,
@@ -85,70 +86,67 @@ export function DurationInput({
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 p-4 bg-surface rounded-xl">
-      <label className="font-body font-bold text-lg text-text-secondary tracking-wide">
+    <div className="flex flex-col items-center gap-2 p-3 bg-surface rounded-xl">
+      <label className="font-body font-bold text-sm text-text-secondary tracking-wide">
         {label}
       </label>
       
-      <div className="flex items-center gap-3">
+      {/* Time display */}
+      <div className="flex items-baseline justify-center">
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={minInput}
+          onChange={handleMinutesChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          aria-label={`${label} minutes`}
+          className="w-8 font-display font-bold text-2xl text-text-primary text-center
+                     bg-transparent border-b-2 border-transparent
+                     focus:border-work focus:outline-none
+                     transition-colors"
+        />
+        <span className="font-display text-xl text-text-secondary">:</span>
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={secInput}
+          onChange={handleSecondsChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          aria-label={`${label} seconds`}
+          className="w-8 font-display font-bold text-2xl text-text-primary text-center
+                     bg-transparent border-b-2 border-transparent
+                     focus:border-work focus:outline-none
+                     transition-colors"
+        />
+      </div>
+
+      {/* +/- buttons row */}
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={handleDecrement}
           disabled={value <= min}
           aria-label="Decrease duration"
-          className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
+          className="w-10 h-8 rounded-lg bg-surface-elevated text-text-primary font-bold text-xl
                      hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
-                     transition-colors flex-shrink-0"
+                     transition-colors"
         >
           −
         </button>
-        
-        <div className="flex items-baseline gap-1">
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={minInput}
-            onChange={handleMinutesChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            aria-label={`${label} minutes`}
-            className="w-12 font-display font-bold text-3xl text-text-primary text-center
-                       bg-transparent border-b-2 border-transparent
-                       focus:border-work focus:outline-none
-                       transition-colors"
-          />
-          <span className="font-body text-sm text-text-secondary">m</span>
-          
-          <span className="font-display text-2xl text-text-secondary mx-1">:</span>
-          
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={secInput}
-            onChange={handleSecondsChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            aria-label={`${label} seconds`}
-            className="w-10 font-display font-bold text-3xl text-text-primary text-center
-                       bg-transparent border-b-2 border-transparent
-                       focus:border-work focus:outline-none
-                       transition-colors"
-          />
-          <span className="font-body text-sm text-text-secondary">s</span>
-        </div>
-        
         <button
           type="button"
           onClick={handleIncrement}
           disabled={value >= max}
           aria-label="Increase duration"
-          className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
+          className="w-10 h-8 rounded-lg bg-surface-elevated text-text-primary font-bold text-xl
                      hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
-                     transition-colors flex-shrink-0"
+                     transition-colors"
         >
           +
         </button>
