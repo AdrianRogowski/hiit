@@ -87,15 +87,20 @@ export function useSound(): UseSoundReturn {
 
   const playWorkComplete = useCallback(() => {
     if (mutedRef.current) return
-    // Play two quick ascending tones
-    playTone(SOUND_FREQUENCIES['work-complete'], 150)
-    setTimeout(() => playTone(SOUND_FREQUENCIES['work-complete'] * 1.25, 200), 180)
+    // Play 5 descending beeps (work ending - time to rest!)
+    const baseFreq = SOUND_FREQUENCIES['work-complete']
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => playTone(baseFreq * (1 - i * 0.05), 120), i * 150)
+    }
   }, [])
 
   const playRestComplete = useCallback(() => {
     if (mutedRef.current) return
-    // Play a gentle alerting tone
-    playTone(SOUND_FREQUENCIES['rest-complete'], 300, 'triangle')
+    // Play 5 ascending beeps (rest ending - back to work!)
+    const baseFreq = SOUND_FREQUENCIES['rest-complete']
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => playTone(baseFreq * (1 + i * 0.08), 120, 'triangle'), i * 150)
+    }
   }, [])
 
   const playWarning = useCallback(() => {
