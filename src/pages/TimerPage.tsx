@@ -3,7 +3,6 @@ import type { TimerConfig } from '@/types/timer'
 import { useTimer } from '@/hooks/useTimer'
 import { useSound, getTransitionSound, shouldPlayWarning } from '@/hooks/useSound'
 import { useNotifications } from '@/hooks/useNotifications'
-import { useSync } from '@/hooks/useSync'
 import { calculateTotalTime } from '@/utils/parseTimerInput'
 import {
   TimerDisplay,
@@ -12,7 +11,6 @@ import {
   TimerControls,
   Button,
   Modal,
-  ShareModal,
 } from '@/components'
 
 export interface TimerPageProps {
@@ -28,10 +26,8 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
   const timer = useTimer(config)
   const sound = useSound()
   const notifications = useNotifications()
-  const sync = useSync()
 
   const [showStopConfirm, setShowStopConfirm] = useState(false)
-  const [showShareModal, setShowShareModal] = useState(false)
   const [prevPhase, setPrevPhase] = useState(timer.state.phase)
   const [prevTimeRemaining, setPrevTimeRemaining] = useState(timer.state.timeRemaining)
 
@@ -43,9 +39,6 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
     if (notifications.permission === 'default') {
       notifications.requestPermission()
     }
-
-    // Create sync session
-    sync.createSession(config)
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -81,11 +74,6 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
     }
     setPrevTimeRemaining(timer.state.timeRemaining)
   }, [timer.state.timeRemaining, timer.state.isRunning, prevTimeRemaining, sound])
-
-  // Broadcast state changes to synced devices
-  useEffect(() => {
-    sync.broadcastState(timer.state)
-  }, [timer.state, sync])
 
   // Handle session complete
   useEffect(() => {
@@ -163,8 +151,8 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
         />
       </div>
 
-      {/* Bottom bar */}
-      <div className="flex items-center justify-between p-4 border-t border-text-secondary/10">
+      {/* Bottom bar - sound toggle */}
+      <div className="flex items-center justify-center p-4 border-t border-text-secondary/10">
         <button
           type="button"
           onClick={() => sound.setMuted(!sound.isMuted)}
@@ -176,19 +164,6 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
           <span>{sound.isMuted ? '🔇' : '🔊'}</span>
           <span className="font-body text-sm">
             Sound {sound.isMuted ? 'Off' : 'On'}
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setShowShareModal(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg
-                     text-text-secondary hover:text-text-primary hover:bg-surface
-                     transition-colors"
-        >
-          <span>📱</span>
-          <span className="font-body text-sm">
-            {sync.session?.connectedDevices ?? 1} device{(sync.session?.connectedDevices ?? 1) !== 1 ? 's' : ''} connected
           </span>
         </button>
       </div>
@@ -220,14 +195,6 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
           </div>
         </div>
       </Modal>
-
-      {/* Share modal */}
-      <ShareModal
-        isOpen={showShareModal}
-        onClose={() => setShowShareModal(false)}
-        shareUrl={sync.getShareUrl()}
-        connectedDevices={sync.session?.connectedDevices ?? 1}
-      />
     </div>
   )
 }

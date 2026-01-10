@@ -117,11 +117,4 @@ describe('SetupPage', () => {
     })
   })
 
-  describe('Multi-device share', () => {
-    it('shows multi-device option', () => {
-      render(<SetupPage onStart={() => {}} />)
-      
-      expect(screen.getByText(/multi-device/i)).toBeInTheDocument()
-    })
-  })
 })

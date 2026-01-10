@@ -7,7 +7,7 @@
 
 ## Overview
 
-A simple interval timer for alternating work/rest periods. Users can configure custom durations (minutes and seconds) and total rounds, then track progress with a large, room-visible countdown display. Supports multi-device sync via shareable URLs for notifications across multiple devices/rooms.
+A simple interval timer for alternating work/rest periods. Users can configure custom durations (minutes and seconds) and total rounds, then track progress with a large, room-visible countdown display. Includes sound alerts and browser notifications to alert you when intervals change.
 
 ---
 
@@ -199,33 +199,16 @@ And if allowed, I will receive notifications even when tab is inactive
 
 ---
 
-## Feature: Multi-Device Sync
-
-Sync timer across multiple devices via shareable URL for whole-house coverage.
-
-### Scenario: Generate shareable link
-Given I have started a timer
-When I tap the device count button
-Then a modal should appear with a QR code
-And I should see a shareable URL
-And I should have options to copy link
-
-### Scenario: Device count indicator
-Given multiple devices are connected
-Then I should see "X devices connected" indicator
-And this should update as devices join/leave
-
-### Scenario: Real-time sync across devices
-Given I have the same timer open on my phone and tablet
-When the host device timer changes (pause, skip, complete)
-Then all connected devices should update
-And sounds should play on ALL connected devices
-
----
-
 ## Future Enhancements (Not Yet Implemented)
 
 The following features are planned but not yet implemented:
+
+### Multi-Device Sync
+- [ ] Sync timer across multiple devices via shareable URL
+- [ ] Generate QR code for easy mobile scanning
+- [ ] Real-time sync of timer state (pause, skip, complete)
+- [ ] Device count indicator showing connected devices
+- [ ] Sounds play on ALL connected devices
 
 ### Session History & Quick Restart
 - [ ] Save favorite configuration with custom name
@@ -235,10 +218,6 @@ The following features are planned but not yet implemented:
 ### Transition Warning Overlay
 - [ ] Show "GET READY FOR REST!" text overlay at 10 seconds
 - [ ] Pulsing animation on timer display
-
-### Host vs Guest Permissions
-- [ ] Differentiate between host and guest permissions
-- [ ] Guests can pause/resume locally, but skip/stop requires host
 
 ---
 

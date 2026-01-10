@@ -184,15 +184,6 @@ export function SetupPage({ onStart }: SetupPageProps) {
         >
           START TIMER
         </Button>
-
-        {/* Multi-device option */}
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 text-text-secondary hover:text-text-primary transition-colors"
-        >
-          <span>📱</span>
-          <span className="font-body">Multi-Device Sync</span>
-        </button>
       </div>
     </div>
   )

@@ -139,14 +139,4 @@ describe('TimerPage', () => {
       })
     })
   })
-
-  describe('Device count', () => {
-    it('shows connected devices indicator', async () => {
-      render(<TimerPage config={testConfig} onComplete={() => {}} onStop={() => {}} />)
-      
-      await waitFor(() => {
-        expect(screen.getByText(/device/i)).toBeInTheDocument()
-      })
-    })
-  })
 })
