@@ -48,7 +48,6 @@ export function useNotifications(): UseNotificationsReturn {
         icon: '/timer-icon.png',
         badge: '/timer-badge.png',
         tag: 'hiit-timer',
-        renotify: true,
       })
     } catch {
       // Notification failed

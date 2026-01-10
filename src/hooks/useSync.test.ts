@@ -98,7 +98,7 @@ describe('useSync', () => {
     it('creates a new session and returns share URL', async () => {
       const { result } = renderHook(() => useSync())
       
-      let session: typeof result.current.session
+      let session: typeof result.current.session = null
       await act(async () => {
         session = await result.current.createSession(testConfig)
       })
@@ -127,7 +127,7 @@ describe('useSync', () => {
     it('joins an existing session by ID', async () => {
       const { result } = renderHook(() => useSync())
       
-      let session: typeof result.current.session
+      let session: typeof result.current.session = null
       await act(async () => {
         session = await result.current.joinSession('existing123')
       })

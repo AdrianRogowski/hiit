@@ -13,7 +13,7 @@ export interface TimerControlsProps {
  * Timer control buttons (pause, resume, stop, skip, adjust rounds)
  */
 export function TimerControls({
-  isRunning,
+  isRunning: _isRunning,
   isPaused,
   onPause,
   onResume,
