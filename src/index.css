@@ -9,9 +9,9 @@
   --color-surface: #1A1A1A;
   --color-surface-elevated: #262626;
   --color-work: #FF6B35;
-  --color-work-glow: rgba(255, 107, 53, 0.3);
+  --color-work-glow: rgba(255, 107, 53, 0.4);
   --color-rest: #00D9A5;
-  --color-rest-glow: rgba(0, 217, 165, 0.3);
+  --color-rest-glow: rgba(0, 217, 165, 0.4);
   --color-paused: #FFD166;
   --color-text-primary: #FFFFFF;
   --color-text-secondary: #A0A0A0;
@@ -40,6 +40,27 @@
 
   .font-body {
     font-family: 'Outfit', 'DM Sans', sans-serif;
+  }
+
+  /* Text glow effects for timer numbers */
+  .text-glow-work {
+    text-shadow: 
+      0 0 20px var(--color-work-glow),
+      0 0 40px var(--color-work-glow),
+      0 0 60px var(--color-work-glow);
+  }
+
+  .text-glow-rest {
+    text-shadow: 
+      0 0 20px var(--color-rest-glow),
+      0 0 40px var(--color-rest-glow),
+      0 0 60px var(--color-rest-glow);
+  }
+
+  .text-glow-paused {
+    text-shadow: 
+      0 0 10px rgba(255, 209, 102, 0.3),
+      0 0 20px rgba(255, 209, 102, 0.2);
   }
 }
 

@@ -61,7 +61,7 @@ export function SetupPage({ onStart }: SetupPageProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8">
       {/* Header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-8">
         <h1 className="font-display font-bold text-4xl text-text-primary mb-2">
           HIIT TIMER
         </h1>
@@ -70,127 +70,130 @@ export function SetupPage({ onStart }: SetupPageProps) {
         </p>
       </div>
 
-      {/* Duration inputs */}
-      <div className="flex flex-wrap justify-center gap-4 mb-6">
-        <DurationInput
-          label="WORK"
-          value={workDuration}
-          onChange={(v) => { setWorkDuration(v); setSelectedPreset(null); }}
-          min={5}
-          max={120 * 60}
-        />
-        <DurationInput
-          label="REST"
-          value={restDuration}
-          onChange={(v) => { setRestDuration(v); setSelectedPreset(null); }}
-          min={5}
-          max={120 * 60}
-        />
-      </div>
+      {/* Main content - constrained width */}
+      <div className="w-full max-w-md flex flex-col gap-6">
+        {/* Duration inputs row */}
+        <div className="grid grid-cols-2 gap-3">
+          <DurationInput
+            label="WORK"
+            value={workDuration}
+            onChange={(v) => { setWorkDuration(v); setSelectedPreset(null); }}
+            min={5}
+            max={120 * 60}
+          />
+          <DurationInput
+            label="REST"
+            value={restDuration}
+            onChange={(v) => { setRestDuration(v); setSelectedPreset(null); }}
+            min={5}
+            max={120 * 60}
+          />
+        </div>
 
-      {/* Rounds input */}
-      <div className="flex flex-col items-center gap-2 p-4 bg-surface rounded-xl mb-8 min-w-[280px]">
-        <label className="font-body font-bold text-lg text-text-secondary tracking-wide">
-          ROUNDS
-        </label>
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => { setRounds(Math.max(1, rounds - 1)); setSelectedPreset(null); }}
-            disabled={rounds <= 1}
-            aria-label="Decrease rounds"
-            className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
-                       hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
-                       transition-colors flex-shrink-0"
-          >
-            −
-          </button>
-          <div className="flex flex-col items-center w-32">
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={rounds}
-              onChange={(e) => {
-                const val = e.target.value
-                if (val === '' || /^\d+$/.test(val)) {
-                  const num = parseInt(val) || 1
-                  setRounds(Math.max(1, Math.min(99, num)))
-                  setSelectedPreset(null)
-                }
-              }}
-              aria-label="Number of rounds"
-              className="w-16 font-display font-bold text-4xl text-text-primary text-center
-                         bg-transparent border-b-2 border-transparent
-                         focus:border-work focus:outline-none
-                         transition-colors"
-            />
-            <span className="font-body text-sm text-text-secondary text-center whitespace-nowrap">
-              {formatDuration(totalTime)} total
-            </span>
+        {/* Rounds input */}
+        <div className="flex flex-col items-center gap-2 p-4 bg-surface rounded-xl">
+          <label className="font-body font-bold text-lg text-text-secondary tracking-wide">
+            ROUNDS
+          </label>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => { setRounds(Math.max(1, rounds - 1)); setSelectedPreset(null); }}
+              disabled={rounds <= 1}
+              aria-label="Decrease rounds"
+              className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
+                         hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
+                         transition-colors flex-shrink-0"
+            >
+              −
+            </button>
+            <div className="flex flex-col items-center min-w-[100px]">
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={rounds}
+                onChange={(e) => {
+                  const val = e.target.value
+                  if (val === '' || /^\d+$/.test(val)) {
+                    const num = parseInt(val) || 1
+                    setRounds(Math.max(1, Math.min(99, num)))
+                    setSelectedPreset(null)
+                  }
+                }}
+                aria-label="Number of rounds"
+                className="w-16 font-display font-bold text-4xl text-text-primary text-center
+                           bg-transparent border-b-2 border-transparent
+                           focus:border-work focus:outline-none
+                           transition-colors"
+              />
+              <span className="font-body text-sm text-text-secondary text-center">
+                {formatDuration(totalTime)} total
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => { setRounds(rounds + 1); setSelectedPreset(null); }}
+              disabled={rounds >= 99}
+              aria-label="Increase rounds"
+              className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
+                         hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
+                         transition-colors flex-shrink-0"
+            >
+              +
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => { setRounds(rounds + 1); setSelectedPreset(null); }}
-            disabled={rounds >= 99}
-            aria-label="Increase rounds"
-            className="w-11 h-11 rounded-lg bg-surface-elevated text-text-primary font-bold text-2xl
-                       hover:bg-work/20 active:bg-work/30 disabled:opacity-30 disabled:cursor-not-allowed
-                       transition-colors flex-shrink-0"
-          >
-            +
-          </button>
         </div>
+
+        {/* Presets */}
+        <div>
+          <h2 className="font-body font-semibold text-text-secondary text-center mb-3">
+            PRESETS
+          </h2>
+          <div className="grid grid-cols-4 gap-2">
+            {PRESETS.map((preset) => (
+              <PresetCard
+                key={preset.id}
+                preset={preset}
+                onSelect={handlePresetSelect}
+                selected={selectedPreset === preset.id}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Error/Warning messages */}
+        {error && (
+          <div className="p-4 bg-error/20 border border-error rounded-xl">
+            <p className="font-body text-error text-center">{error}</p>
+          </div>
+        )}
+        {warning && !error && (
+          <div className="p-4 bg-warning/20 border border-warning rounded-xl">
+            <p className="font-body text-warning text-center">{warning}</p>
+          </div>
+        )}
+
+        {/* Start button */}
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={handleStart}
+          disabled={!!error}
+          className="w-full text-xl py-5"
+        >
+          START TIMER
+        </Button>
+
+        {/* Multi-device option */}
+        <button
+          type="button"
+          className="flex items-center justify-center gap-2 text-text-secondary hover:text-text-primary transition-colors"
+        >
+          <span>📱</span>
+          <span className="font-body">Multi-Device Sync</span>
+        </button>
       </div>
-
-      {/* Presets */}
-      <div className="w-full max-w-lg mb-8">
-        <h2 className="font-body font-semibold text-text-secondary text-center mb-3">
-          PRESETS
-        </h2>
-        <div className="flex flex-wrap justify-center gap-3">
-          {PRESETS.map((preset) => (
-            <PresetCard
-              key={preset.id}
-              preset={preset}
-              onSelect={handlePresetSelect}
-              selected={selectedPreset === preset.id}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Error/Warning messages */}
-      {error && (
-        <div className="w-full max-w-lg mb-4 p-4 bg-error/20 border border-error rounded-xl">
-          <p className="font-body text-error text-center">{error}</p>
-        </div>
-      )}
-      {warning && !error && (
-        <div className="w-full max-w-lg mb-4 p-4 bg-warning/20 border border-warning rounded-xl">
-          <p className="font-body text-warning text-center">{warning}</p>
-        </div>
-      )}
-
-      {/* Start button */}
-      <Button
-        variant="primary"
-        size="lg"
-        onClick={handleStart}
-        disabled={!!error}
-        className="w-full max-w-lg text-xl py-5"
-      >
-        START TIMER
-      </Button>
-
-      {/* Multi-device option */}
-      <button
-        type="button"
-        className="mt-6 flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors"
-      >
-        <span>📱</span>
-        <span className="font-body">Multi-Device Sync</span>
-      </button>
     </div>
   )
 }

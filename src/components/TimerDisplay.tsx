@@ -10,17 +10,17 @@ const phaseStyles: Record<TimerPhase, { text: string; label: string; glow: strin
   work: {
     text: 'text-work',
     label: 'WORK',
-    glow: 'shadow-glow-work',
+    glow: 'text-glow-work',
   },
   rest: {
     text: 'text-rest',
     label: 'REST',
-    glow: 'shadow-glow-rest',
+    glow: 'text-glow-rest',
   },
   paused: {
     text: 'text-paused',
     label: 'PAUSED',
-    glow: '',
+    glow: 'text-glow-paused',
   },
   complete: {
     text: 'text-success',
@@ -38,24 +38,24 @@ export function TimerDisplay({ timeRemaining, phase }: TimerDisplayProps) {
   const displayTime = formatTime(timeRemaining)
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-6">
       {/* Phase indicator */}
-      <div className={`px-6 py-2 rounded-lg border-2 ${
-        phase === 'work' ? 'border-work bg-work/10' :
-        phase === 'rest' ? 'border-rest bg-rest/10' :
-        phase === 'paused' ? 'border-paused bg-paused/10' :
-        'border-success bg-success/10'
+      <div className={`px-6 py-2 rounded-full border-2 ${
+        phase === 'work' ? 'border-work/50 bg-work/10' :
+        phase === 'rest' ? 'border-rest/50 bg-rest/10' :
+        phase === 'paused' ? 'border-paused/50 bg-paused/10' :
+        'border-success/50 bg-success/10'
       }`}>
         <span className={`font-body font-bold text-xl tracking-widest ${style.text}`}>
           {style.label}
         </span>
       </div>
 
-      {/* Timer display */}
+      {/* Timer display - just the glowing numbers */}
       <div
         data-testid="timer-display"
         className={`
-          font-display font-bold text-timer-giant
+          font-display font-bold text-timer-giant leading-none
           ${style.text} ${style.glow}
           transition-all duration-500
           ${phase === 'paused' ? 'animate-pulse' : ''}
