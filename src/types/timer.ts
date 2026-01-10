@@ -10,7 +10,7 @@ export interface TimerConfig {
 /**
  * Timer state during active session
  */
-export type TimerPhase = 'work' | 'rest' | 'paused' | 'complete'
+export type TimerPhase = 'ready' | 'work' | 'rest' | 'paused' | 'complete'
 
 export interface TimerState {
   phase: TimerPhase

@@ -9,13 +9,15 @@ const testConfig: TimerConfig = {
   totalRounds: 5,
 }
 
+const GET_READY_DURATION = 10 // matches the constant in useTimer
+
 describe('createInitialState', () => {
-  it('creates initial state from config', () => {
+  it('creates initial state with ready phase', () => {
     const state = createInitialState(testConfig)
     
-    expect(state.phase).toBe('work')
+    expect(state.phase).toBe('ready')
     expect(state.currentRound).toBe(1)
-    expect(state.timeRemaining).toBe(30 * 60)
+    expect(state.timeRemaining).toBe(GET_READY_DURATION)
     expect(state.totalRounds).toBe(5)
     expect(state.isRunning).toBe(false)
     expect(state.config).toEqual(testConfig)
@@ -24,6 +26,13 @@ describe('createInitialState', () => {
 
 describe('getNextPhase', () => {
   describe('Scenario: Round progression', () => {
+    it('transitions from ready to work', () => {
+      const result = getNextPhase('ready', 1, 5)
+      
+      expect(result.phase).toBe('work')
+      expect(result.round).toBe(1)
+    })
+
     it('transitions from work to rest (same round)', () => {
       const result = getNextPhase('work', 2, 5)
       
@@ -63,15 +72,31 @@ describe('useTimer', () => {
     vi.useRealTimers()
   })
 
-  describe('Scenario: Work period display', () => {
-    it('starts with work phase and correct time', () => {
+  describe('Scenario: Get ready countdown', () => {
+    it('starts with ready phase and 10 second countdown', () => {
       const { result } = renderHook(() => useTimer(testConfig))
       
-      expect(result.current.state.phase).toBe('work')
-      expect(result.current.state.timeRemaining).toBe(30 * 60)
+      expect(result.current.state.phase).toBe('ready')
+      expect(result.current.state.timeRemaining).toBe(GET_READY_DURATION)
       expect(result.current.state.currentRound).toBe(1)
       expect(result.current.state.totalRounds).toBe(5)
       expect(result.current.state.isRunning).toBe(false)
+    })
+
+    it('transitions to work phase after ready countdown', () => {
+      const { result } = renderHook(() => useTimer(testConfig))
+      
+      act(() => {
+        result.current.start()
+      })
+      
+      // Advance through ready countdown
+      act(() => {
+        vi.advanceTimersByTime(GET_READY_DURATION * 1000)
+      })
+      
+      expect(result.current.state.phase).toBe('work')
+      expect(result.current.state.timeRemaining).toBe(30 * 60)
     })
   })
 
@@ -84,19 +109,19 @@ describe('useTimer', () => {
       })
       
       expect(result.current.state.isRunning).toBe(true)
-      expect(result.current.state.timeRemaining).toBe(30 * 60)
+      expect(result.current.state.timeRemaining).toBe(GET_READY_DURATION)
       
       act(() => {
         vi.advanceTimersByTime(1000)
       })
       
-      expect(result.current.state.timeRemaining).toBe(30 * 60 - 1)
+      expect(result.current.state.timeRemaining).toBe(GET_READY_DURATION - 1)
       
       act(() => {
         vi.advanceTimersByTime(5000)
       })
       
-      expect(result.current.state.timeRemaining).toBe(30 * 60 - 6)
+      expect(result.current.state.timeRemaining).toBe(GET_READY_DURATION - 6)
     })
   })
 
@@ -114,9 +139,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Advance through entire work period
+      // Advance through ready (10s) + work (5s)
       act(() => {
-        vi.advanceTimersByTime(5000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 5) * 1000)
       })
       
       expect(result.current.state.phase).toBe('rest')
@@ -139,9 +164,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Complete round 1 (work + rest)
+      // Complete ready (10s) + round 1 (work 2s + rest 2s)
       act(() => {
-        vi.advanceTimersByTime(4000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 4) * 1000)
       })
       
       expect(result.current.state.phase).toBe('work')
@@ -163,9 +188,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Complete all rounds (2 rounds × (1s work + 1s rest) = 4s)
+      // Complete ready (10s) + all rounds (2 rounds × (1s work + 1s rest) = 4s)
       act(() => {
-        vi.advanceTimersByTime(4000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 4) * 1000)
       })
       
       expect(result.current.state.phase).toBe('complete')
@@ -211,8 +236,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
+      // Advance past ready into work phase
       act(() => {
-        vi.advanceTimersByTime(10000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 5) * 1000)
       })
       
       act(() => {
@@ -237,7 +263,7 @@ describe('useTimer', () => {
   })
 
   describe('Scenario: Stop timer early', () => {
-    it('resets timer when stopped', () => {
+    it('resets timer when stopped (back to ready phase)', () => {
       const { result } = renderHook(() => useTimer(testConfig))
       
       act(() => {
@@ -253,14 +279,14 @@ describe('useTimer', () => {
       })
       
       expect(result.current.state.isRunning).toBe(false)
-      expect(result.current.state.phase).toBe('work')
+      expect(result.current.state.phase).toBe('ready')
       expect(result.current.state.currentRound).toBe(1)
-      expect(result.current.state.timeRemaining).toBe(30 * 60)
+      expect(result.current.state.timeRemaining).toBe(GET_READY_DURATION)
     })
   })
 
   describe('Scenario: Skip current interval', () => {
-    it('advances to next interval when skipped', () => {
+    it('advances from ready to work when skipped', () => {
       const { result } = renderHook(() => useTimer(testConfig))
       
       act(() => {
@@ -268,8 +294,31 @@ describe('useTimer', () => {
       })
       
       act(() => {
-        vi.advanceTimersByTime(5000) // 5 seconds in
+        vi.advanceTimersByTime(5000) // 5 seconds into ready
       })
+      
+      act(() => {
+        result.current.skip()
+      })
+      
+      expect(result.current.state.phase).toBe('work')
+      expect(result.current.state.timeRemaining).toBe(30 * 60)
+      expect(result.current.state.currentRound).toBe(1)
+    })
+
+    it('advances from work to rest when skipped', () => {
+      const { result } = renderHook(() => useTimer(testConfig))
+      
+      act(() => {
+        result.current.start()
+      })
+      
+      // Get past ready phase
+      act(() => {
+        vi.advanceTimersByTime(GET_READY_DURATION * 1000)
+      })
+      
+      expect(result.current.state.phase).toBe('work')
       
       act(() => {
         result.current.skip()
@@ -293,9 +342,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Complete work, enter rest
+      // Complete ready + work, enter rest
       act(() => {
-        vi.advanceTimersByTime(1000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 1) * 1000)
       })
       
       expect(result.current.state.phase).toBe('rest')
@@ -357,9 +406,9 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Advance to round 2
+      // Advance to round 2: ready (10s) + work (1s) + rest (1s) = 12s
       act(() => {
-        vi.advanceTimersByTime(2000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 2) * 1000)
       })
       
       expect(result.current.state.currentRound).toBe(2)

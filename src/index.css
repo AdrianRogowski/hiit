@@ -62,6 +62,13 @@
       0 0 10px rgba(255, 209, 102, 0.3),
       0 0 20px rgba(255, 209, 102, 0.2);
   }
+
+  .text-glow-ready {
+    text-shadow: 
+      0 0 20px rgba(245, 158, 11, 0.4),
+      0 0 40px rgba(245, 158, 11, 0.3),
+      0 0 60px rgba(245, 158, 11, 0.2);
+  }
 }
 
 /* Custom scrollbar for dark theme */

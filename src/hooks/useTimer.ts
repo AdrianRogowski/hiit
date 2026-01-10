@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { TimerConfig, TimerState, TimerPhase } from '@/types/timer'
 
+const GET_READY_DURATION = 10 // seconds
+
 export interface UseTimerReturn {
   state: TimerState
   start: () => void
@@ -15,12 +17,13 @@ export interface UseTimerReturn {
 
 /**
  * Calculate initial timer state from config
+ * Starts with 'ready' phase for 10 second countdown
  */
 export function createInitialState(config: TimerConfig): TimerState {
   return {
-    phase: 'work',
+    phase: 'ready',
     currentRound: 1,
-    timeRemaining: config.workDuration,
+    timeRemaining: GET_READY_DURATION,
     totalRounds: config.totalRounds,
     isRunning: false,
     config,
@@ -35,6 +38,10 @@ export function getNextPhase(
   currentRound: number,
   totalRounds: number
 ): { phase: TimerPhase; round: number } {
+  if (currentPhase === 'ready') {
+    return { phase: 'work', round: 1 }
+  }
+  
   if (currentPhase === 'work') {
     return { phase: 'rest', round: currentRound }
   }
@@ -56,7 +63,7 @@ export function getNextPhase(
 export function useTimer(config: TimerConfig): UseTimerReturn {
   const [state, setState] = useState<TimerState>(() => createInitialState(config))
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const previousPhaseRef = useRef<TimerPhase>('work')
+  const previousPhaseRef = useRef<TimerPhase>('ready')
 
   // Clear interval on unmount
   useEffect(() => {
@@ -96,9 +103,13 @@ export function useTimer(config: TimerConfig): UseTimerReturn {
             }
           }
 
-          const nextDuration = nextPhase === 'work' 
-            ? prev.config.workDuration 
-            : prev.config.restDuration
+          // Determine next duration based on phase
+          let nextDuration: number
+          if (nextPhase === 'work') {
+            nextDuration = prev.config.workDuration
+          } else {
+            nextDuration = prev.config.restDuration
+          }
 
           return {
             ...prev,
@@ -168,9 +179,13 @@ export function useTimer(config: TimerConfig): UseTimerReturn {
         }
       }
 
-      const nextDuration = nextPhase === 'work'
-        ? prev.config.workDuration
-        : prev.config.restDuration
+      // Determine next duration
+      let nextDuration: number
+      if (nextPhase === 'work') {
+        nextDuration = prev.config.workDuration
+      } else {
+        nextDuration = prev.config.restDuration
+      }
 
       previousPhaseRef.current = nextPhase
 

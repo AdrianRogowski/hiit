@@ -19,24 +19,24 @@ describe('TimerPage', () => {
     vi.useRealTimers()
   })
 
-  describe('Scenario: Work period display', () => {
-    it('shows large countdown timer', async () => {
+  describe('Scenario: Get ready countdown', () => {
+    it('shows get ready countdown initially', async () => {
       render(<TimerPage config={testConfig} onComplete={() => {}} onStop={() => {}} />)
       
       await waitFor(() => {
-        expect(screen.getByText('30:00')).toBeInTheDocument()
+        expect(screen.getByText('00:10')).toBeInTheDocument()
       })
     })
 
-    it('shows work indicator', async () => {
+    it('shows GET READY indicator', async () => {
       render(<TimerPage config={testConfig} onComplete={() => {}} onStop={() => {}} />)
       
       await waitFor(() => {
-        expect(screen.getByText('WORK')).toBeInTheDocument()
+        expect(screen.getByText('GET READY')).toBeInTheDocument()
       })
     })
 
-    it('shows round indicator', async () => {
+    it('shows round indicator during get ready', async () => {
       render(<TimerPage config={testConfig} onComplete={() => {}} onStop={() => {}} />)
       
       await waitFor(() => {

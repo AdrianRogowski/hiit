@@ -8,6 +8,7 @@ export interface ProgressBarProps {
 }
 
 const phaseColors: Record<TimerPhase, string> = {
+  ready: 'bg-warning',
   work: 'bg-work',
   rest: 'bg-rest',
   paused: 'bg-paused',

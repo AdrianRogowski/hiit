@@ -74,9 +74,21 @@ Then I should see a warning "That's a long session! Are you sure?"
 
 The main timer screen shows a large countdown visible from across a room.
 
+### Scenario: Get ready countdown before workout starts
+Given I have pressed "Start Timer" on the setup screen
+When the timer page loads
+Then I should see a 10 second "GET READY" countdown
+And the display should show the countdown (10, 9, 8... 1)
+And I should see "GET READY" indicator
+And I should see "Round 1 of X" (showing upcoming round)
+And warning beeps should play each second during the countdown
+When the countdown reaches 0
+Then the ascending "back to work" chime should play
+And the first work period should begin automatically
+
 ### Scenario: Work period display
-Given I have started a timer with 30 min work / 30 min rest
-When a work period is active
+Given the get ready countdown has completed
+When the first work period begins
 Then I should see the countdown in large text (readable from 10+ feet)
 And the screen should have a work-state color theme (coral-orange)
 And I should see "WORK" indicator

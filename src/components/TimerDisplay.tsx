@@ -7,6 +7,11 @@ export interface TimerDisplayProps {
 }
 
 const phaseStyles: Record<TimerPhase, { text: string; label: string; glow: string }> = {
+  ready: {
+    text: 'text-warning',
+    label: 'GET READY',
+    glow: 'text-glow-ready',
+  },
   work: {
     text: 'text-work',
     label: 'WORK',
@@ -41,6 +46,7 @@ export function TimerDisplay({ timeRemaining, phase }: TimerDisplayProps) {
     <div className="flex flex-col items-center gap-6">
       {/* Phase indicator */}
       <div className={`px-6 py-2 rounded-full border-2 ${
+        phase === 'ready' ? 'border-warning/50 bg-warning/10' :
         phase === 'work' ? 'border-work/50 bg-work/10' :
         phase === 'rest' ? 'border-rest/50 bg-rest/10' :
         phase === 'paused' ? 'border-paused/50 bg-paused/10' :

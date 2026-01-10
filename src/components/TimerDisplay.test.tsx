@@ -3,6 +3,27 @@ import { render, screen } from '@testing-library/react'
 import { TimerDisplay } from './TimerDisplay'
 
 describe('TimerDisplay', () => {
+  describe('Scenario: Get ready countdown', () => {
+    it('shows GET READY indicator', () => {
+      render(<TimerDisplay timeRemaining={10} phase="ready" />)
+      
+      expect(screen.getByText(/get ready/i)).toBeInTheDocument()
+    })
+
+    it('applies warning color theme', () => {
+      render(<TimerDisplay timeRemaining={10} phase="ready" />)
+      
+      const timer = screen.getByTestId('timer-display')
+      expect(timer).toHaveClass('text-warning')
+    })
+
+    it('displays countdown time', () => {
+      render(<TimerDisplay timeRemaining={10} phase="ready" />)
+      
+      expect(screen.getByText('00:10')).toBeInTheDocument()
+    })
+  })
+
   describe('Scenario: Work period display', () => {
     it('displays time in large text', () => {
       render(<TimerDisplay timeRemaining={23 * 60 + 45} phase="work" />)

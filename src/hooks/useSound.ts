@@ -23,6 +23,11 @@ export function getTransitionSound(
     return null
   }
 
+  // Ready -> Work: play the "back to work" chime to signal workout starting
+  if (fromPhase === 'ready' && toPhase === 'work') {
+    return 'rest-complete'
+  }
+
   if (fromPhase === 'work' && toPhase === 'rest') {
     return 'work-complete'
   }
