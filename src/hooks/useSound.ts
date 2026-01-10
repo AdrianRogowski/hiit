@@ -8,6 +8,7 @@ export interface UseSoundReturn {
   playSessionComplete: () => void
   setMuted: (muted: boolean) => void
   isMuted: boolean
+  unlockAudio: () => void
 }
 
 /**
@@ -44,7 +45,7 @@ export function shouldPlayWarning(timeRemaining: number): boolean {
   return timeRemaining >= 1 && timeRemaining <= 10
 }
 
-// Sound URLs (using Web Audio API tone generation as fallback)
+// Sound frequencies
 const SOUND_FREQUENCIES = {
   'work-complete': 880, // A5 - higher, energetic
   'rest-complete': 523, // C5 - medium, alerting
@@ -52,23 +53,49 @@ const SOUND_FREQUENCIES = {
   'session-complete': 1047, // C6 - celebration
 }
 
+// Singleton AudioContext for better mobile support
+let audioContext: AudioContext | null = null
+
+function getAudioContext(): AudioContext | null {
+  if (typeof window === 'undefined') return null
+  
+  if (!audioContext) {
+    try {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      audioContext = new AudioContextClass()
+    } catch {
+      return null
+    }
+  }
+  
+  // Resume if suspended (common on mobile after tab switch)
+  if (audioContext.state === 'suspended') {
+    audioContext.resume().catch(() => {})
+  }
+  
+  return audioContext
+}
+
 function playTone(frequency: number, duration: number = 200, type: OscillatorType = 'sine') {
+  const ctx = getAudioContext()
+  if (!ctx) return
+
   try {
-    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
-    const oscillator = audioContext.createOscillator()
-    const gainNode = audioContext.createGain()
+    const oscillator = ctx.createOscillator()
+    const gainNode = ctx.createGain()
 
     oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
+    gainNode.connect(ctx.destination)
 
     oscillator.frequency.value = frequency
     oscillator.type = type
     
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000)
+    const now = ctx.currentTime
+    gainNode.gain.setValueAtTime(0.3, now)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration / 1000)
 
-    oscillator.start(audioContext.currentTime)
-    oscillator.stop(audioContext.currentTime + duration / 1000)
+    oscillator.start(now)
+    oscillator.stop(now + duration / 1000)
   } catch {
     // Audio not available
   }
@@ -84,6 +111,28 @@ export function useSound(): UseSoundReturn {
   useEffect(() => {
     mutedRef.current = isMuted
   }, [isMuted])
+
+  // Unlock audio on mobile - call this on first user interaction
+  const unlockAudio = useCallback(() => {
+    const ctx = getAudioContext()
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
+    // Play a silent tone to fully unlock
+    if (ctx) {
+      try {
+        const oscillator = ctx.createOscillator()
+        const gainNode = ctx.createGain()
+        oscillator.connect(gainNode)
+        gainNode.connect(ctx.destination)
+        gainNode.gain.value = 0 // Silent
+        oscillator.start()
+        oscillator.stop(ctx.currentTime + 0.001)
+      } catch {
+        // Ignore
+      }
+    }
+  }, [])
 
   const playWorkComplete = useCallback(() => {
     if (mutedRef.current) return
@@ -128,5 +177,6 @@ export function useSound(): UseSoundReturn {
     playSessionComplete,
     setMuted: handleSetMuted,
     isMuted,
+    unlockAudio,
   }
 }

@@ -33,6 +33,9 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
 
   // Auto-start timer on mount
   useEffect(() => {
+    // Unlock audio for mobile browsers (must happen after user interaction)
+    sound.unlockAudio()
+    
     timer.start()
     
     // Request notification permission
