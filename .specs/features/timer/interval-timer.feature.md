@@ -473,8 +473,11 @@ The following features are planned but not yet implemented:
 ### Typography
 - `font-display` - Timer countdown numbers
 - `font-body` - All other text
-- `text-timer-giant` - Main countdown (8rem)
-- `text-2xl` - State labels (WORK/REST)
+- Timer countdown sizes (responsive):
+  - Mobile: `text-7xl` (~4.5rem)
+  - Tablet (md): `text-[10rem]`
+  - Large (lg): `text-[14rem]`
+- `text-lg` to `text-2xl` - State labels (WORK/REST), responsive
 - `text-lg` - Round indicators
 
 ### Spacing
@@ -523,6 +526,19 @@ The following features are planned but not yet implemented:
 - Work → Rest → Work → Rest... progression
 - **Final round has no rest period** - session completes immediately after final work
 - Total time calculation: `(work × rounds) + (rest × (rounds - 1))`
+
+### Responsive Layout
+Optimized for different screen sizes:
+
+| Breakpoint | Timer Size | Layout | Controls |
+|------------|------------|--------|----------|
+| Mobile (<768px) | ~4.5rem | Top-aligned, tight gaps | Compact (w-12/h-12) |
+| Tablet (768px+) | 10rem | Centered, normal gaps | Medium (w-20/h-20) |
+| Large (1024px+) | 14rem | Centered, spacious | Large (w-24/h-24) |
+
+- Mobile: Content starts at top to ensure all elements (including sound toggle) are visible
+- Tablet/Desktop: Content vertically centered for balanced appearance
+- All sizes maintain readability from across a room
 
 ---
 
