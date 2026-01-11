@@ -6,6 +6,7 @@ import { TimerControls } from './TimerControls'
 const defaultProps = {
   isRunning: true,
   isPaused: false,
+  phase: 'work' as const,
   onPause: vi.fn(),
   onResume: vi.fn(),
   onStop: vi.fn(),

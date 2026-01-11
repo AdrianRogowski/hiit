@@ -32,6 +32,7 @@ export function createInitialState(config: TimerConfig): TimerState {
 
 /**
  * Get the next phase after current phase completes
+ * Note: Final round has no rest - session completes after final work period
  */
 export function getNextPhase(
   currentPhase: TimerPhase,
@@ -43,13 +44,14 @@ export function getNextPhase(
   }
   
   if (currentPhase === 'work') {
+    // Final round: complete immediately (no rest needed)
+    if (currentRound >= totalRounds) {
+      return { phase: 'complete', round: currentRound }
+    }
     return { phase: 'rest', round: currentRound }
   }
   
   if (currentPhase === 'rest') {
-    if (currentRound >= totalRounds) {
-      return { phase: 'complete', round: currentRound }
-    }
     return { phase: 'work', round: currentRound + 1 }
   }
   

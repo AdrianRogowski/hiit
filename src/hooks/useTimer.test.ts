@@ -33,11 +33,18 @@ describe('getNextPhase', () => {
       expect(result.round).toBe(1)
     })
 
-    it('transitions from work to rest (same round)', () => {
+    it('transitions from work to rest (non-final round)', () => {
       const result = getNextPhase('work', 2, 5)
       
       expect(result.phase).toBe('rest')
       expect(result.round).toBe(2)
+    })
+
+    it('transitions from work to complete on final round (no rest)', () => {
+      const result = getNextPhase('work', 5, 5)
+      
+      expect(result.phase).toBe('complete')
+      expect(result.round).toBe(5)
     })
 
     it('transitions from rest to work (next round)', () => {
@@ -45,20 +52,6 @@ describe('getNextPhase', () => {
       
       expect(result.phase).toBe('work')
       expect(result.round).toBe(3)
-    })
-
-    it('transitions to complete after final rest', () => {
-      const result = getNextPhase('rest', 5, 5)
-      
-      expect(result.phase).toBe('complete')
-      expect(result.round).toBe(5)
-    })
-
-    it('handles transition from last work to last rest', () => {
-      const result = getNextPhase('work', 5, 5)
-      
-      expect(result.phase).toBe('rest')
-      expect(result.round).toBe(5)
     })
   })
 })
@@ -175,7 +168,7 @@ describe('useTimer', () => {
   })
 
   describe('Scenario: Session completion', () => {
-    it('sets phase to complete after final rest', () => {
+    it('sets phase to complete after final work (no rest on final round)', () => {
       const shortConfig: TimerConfig = {
         workDuration: 1,
         restDuration: 1,
@@ -188,9 +181,10 @@ describe('useTimer', () => {
         result.current.start()
       })
       
-      // Complete ready (10s) + all rounds (2 rounds × (1s work + 1s rest) = 4s)
+      // Complete ready (10s) + round 1 (1s work + 1s rest) + round 2 (1s work only)
+      // = 10 + 2 + 1 = 13s
       act(() => {
-        vi.advanceTimersByTime((GET_READY_DURATION + 4) * 1000)
+        vi.advanceTimersByTime((GET_READY_DURATION + 3) * 1000)
       })
       
       expect(result.current.state.phase).toBe('complete')

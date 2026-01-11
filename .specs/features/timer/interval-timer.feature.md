@@ -117,8 +117,15 @@ Then the rest period for round 2 should begin
 And when rest ends, round 3 work period should begin
 And the round indicator should update to "Round 3 of 5"
 
+### Scenario: Final round (no rest needed)
+Given I am on the final work period (round 5 of 5)
+When the work period ends
+Then the session should complete immediately
+And no rest period should follow
+And I should see the completion screen
+
 ### Scenario: Session completion
-Given I am on the final rest period
+Given I am on the final work period
 When the timer reaches 00:00
 Then I should see a "Session Complete!" celebration screen
 And I should hear a distinct completion sound
@@ -293,12 +300,13 @@ The following features are planned but not yet implemented:
 │                    ●  ●  ○  ○  ○                            │
 │                                                             │
 │                                                             │
-│   ┌─────────┐    ┌─────────────┐    ┌─────────┐            │
-│   │  SKIP   │    │   ⏸ PAUSE   │    │  STOP   │            │
-│   │   ▶▶    │    │             │    │   ◼     │            │
-│   └─────────┘    └─────────────┘    └─────────┘            │
+│             (skip)      ⏸️        (stop)                    │
+│               ⏭️      PAUSE         ⏹️                      │
 │                                                             │
-│   🔊 Sound On        📱 3 devices connected                 │
+│    Icon-only circular buttons with subtle border           │
+│    Primary (pause) larger with filled bg matching phase    │
+│                                                             │
+│   🔊 Sound On                                               │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -327,12 +335,10 @@ The following features are planned but not yet implemented:
 │                    ●  ●  ○  ○  ○                            │
 │                                                             │
 │                                                             │
-│   ┌─────────┐    ┌─────────────┐    ┌─────────┐            │
-│   │  SKIP   │    │   ⏸ PAUSE   │    │  STOP   │            │
-│   │   ▶▶    │    │             │    │   ◼     │            │
-│   └─────────┘    └─────────────┘    └─────────┘            │
+│             (skip)      ⏸️        (stop)                    │
+│               ⏭️      PAUSE         ⏹️                      │
 │                                                             │
-│   🔊 Sound On        📱 3 devices connected                 │
+│   🔊 Sound On                                               │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -361,14 +367,11 @@ The following features are planned but not yet implemented:
 │                    ●  ●  ○  ○  ○                            │
 │                                                             │
 │                                                             │
-│   ┌─────────┐    ┌─────────────┐    ┌─────────┐            │
-│   │ -ROUND  │    │  ▶ RESUME   │    │ +ROUND  │            │
-│   │         │    │             │    │         │            │
-│   └─────────┘    └─────────────┘    └─────────┘            │
+│              (−)        ▶️         (+)                      │
+│             round    RESUME      round                      │
 │                                                             │
-│                   ┌─────────────┐                           │
-│                   │  ◼  STOP    │                           │
-│                   └─────────────┘                           │
+│                        ⏹️                                   │
+│                       stop                                  │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```

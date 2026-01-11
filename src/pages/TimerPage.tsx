@@ -145,6 +145,7 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
         <TimerControls
           isRunning={timer.state.isRunning}
           isPaused={timer.state.phase === 'paused'}
+          phase={timer.state.phase}
           onPause={handlePause}
           onResume={handleResume}
           onStop={handleStop}
