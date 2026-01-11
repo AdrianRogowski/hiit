@@ -136,14 +136,14 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
   }, [timer])
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Progress bar at top */}
-      <div className="p-4">
+      <div className="p-2 md:p-4 flex-shrink-0">
         <ProgressBar progress={progress} phase={timer.state.phase} />
       </div>
 
-      {/* Main timer area */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-8 px-4">
+      {/* Main timer area - tighter on mobile, centered on larger screens */}
+      <div className="flex-1 flex flex-col items-center justify-start md:justify-center gap-4 md:gap-8 px-4 pt-4 md:pt-0">
         <TimerDisplay
           timeRemaining={timer.state.timeRemaining}
           phase={timer.state.phase}
@@ -168,7 +168,7 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
       </div>
 
       {/* Bottom bar - sound toggle */}
-      <div className="flex items-center justify-center p-4 border-t border-text-secondary/10">
+      <div className="flex-shrink-0 flex items-center justify-center p-3 md:p-4 border-t border-text-secondary/10">
         <button
           type="button"
           onClick={() => sound.setMuted(!sound.isMuted)}
