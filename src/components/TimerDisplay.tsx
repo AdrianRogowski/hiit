@@ -58,12 +58,12 @@ export function TimerDisplay({ timeRemaining, phase }: TimerDisplayProps) {
         </span>
       </div>
 
-      {/* Timer display - responsive sizing: mobile -> tablet -> desktop */}
+      {/* Timer display - large on all sizes, scales up for bigger screens */}
       <div
         data-testid="timer-display"
         className={`
           font-display font-bold leading-none
-          text-7xl md:text-[10rem] lg:text-[14rem]
+          text-[5.5rem] sm:text-[7rem] md:text-[10rem] lg:text-[14rem]
           ${style.text} ${style.glow}
           transition-all duration-500
           ${phase === 'paused' ? 'animate-pulse' : ''}

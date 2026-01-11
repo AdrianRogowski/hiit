@@ -136,14 +136,14 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
   }, [timer])
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden">
       {/* Progress bar at top */}
       <div className="p-2 md:p-4 flex-shrink-0">
         <ProgressBar progress={progress} phase={timer.state.phase} />
       </div>
 
-      {/* Main timer area - tighter on mobile, centered on larger screens */}
-      <div className="flex-1 flex flex-col items-center justify-start md:justify-center gap-4 md:gap-8 px-4 pt-4 md:pt-0">
+      {/* Main timer area - centered, fills available space */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 md:gap-8 px-4">
         <TimerDisplay
           timeRemaining={timer.state.timeRemaining}
           phase={timer.state.phase}
