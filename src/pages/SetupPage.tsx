@@ -130,6 +130,9 @@ export function SetupPage({ onStart }: SetupPageProps) {
               <span className="font-body text-sm text-text-secondary text-center">
                 {formatDuration(totalTime)} total
               </span>
+              <span className="font-body text-xs text-work/70 text-center">
+                {formatDuration(workDuration * rounds)} work
+              </span>
             </div>
             <button
               type="button"
