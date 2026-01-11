@@ -19,7 +19,8 @@ export function CompletePage({ config, onStartAgain, onNewTimer }: CompletePageP
     config.totalRounds
   )
   const workTime = config.workDuration * config.totalRounds
-  const restTime = config.restDuration * config.totalRounds
+  // Final round has no rest, so rest time is (rounds - 1)
+  const restTime = config.restDuration * Math.max(0, config.totalRounds - 1)
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">

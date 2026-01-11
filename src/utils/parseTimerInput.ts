@@ -102,13 +102,15 @@ export function calculateRounds(
 
 /**
  * Calculates total session time from work/rest duration and rounds
+ * Note: Final round has no rest period, so rest is (rounds - 1)
  */
 export function calculateTotalTime(
   workDuration: number,
   restDuration: number,
   rounds: number
 ): number {
-  return (workDuration + restDuration) * rounds
+  // Work time for all rounds + rest time for all but the last round
+  return (workDuration * rounds) + (restDuration * Math.max(0, rounds - 1))
 }
 
 /**

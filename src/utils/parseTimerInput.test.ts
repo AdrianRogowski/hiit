@@ -85,18 +85,26 @@ describe('calculateRounds', () => {
 })
 
 describe('calculateTotalTime', () => {
-  it('calculates total time from duration and rounds', () => {
-    // 30 min work + 30 min rest = 60 min per round
-    // 5 rounds = 300 minutes = 5 hours
+  it('calculates total time (no rest on final round)', () => {
+    // 30 min work × 5 rounds = 150 min
+    // 30 min rest × 4 rounds (no rest on final) = 120 min
+    // Total = 270 min = 4.5 hours
     const totalTime = calculateTotalTime(30 * 60, 30 * 60, 5)
-    expect(totalTime).toBe(5 * 60 * 60)
+    expect(totalTime).toBe(270 * 60) // 4.5 hours
   })
 
-  it('calculates with different durations', () => {
-    // 25 min work + 5 min rest = 30 min per round
-    // 8 rounds = 240 minutes = 4 hours
+  it('calculates with different durations (no rest on final round)', () => {
+    // 25 min work × 8 rounds = 200 min
+    // 5 min rest × 7 rounds (no rest on final) = 35 min
+    // Total = 235 min = 3h 55m
     const totalTime = calculateTotalTime(25 * 60, 5 * 60, 8)
-    expect(totalTime).toBe(4 * 60 * 60)
+    expect(totalTime).toBe(235 * 60) // 3h 55m
+  })
+
+  it('handles single round (no rest at all)', () => {
+    // 1 round = only work, no rest
+    const totalTime = calculateTotalTime(30 * 60, 30 * 60, 1)
+    expect(totalTime).toBe(30 * 60) // Just the work duration
   })
 })
 

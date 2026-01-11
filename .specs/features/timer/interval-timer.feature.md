@@ -271,8 +271,6 @@ The following features are planned but not yet implemented:
 │         │          START TIMER                │            │
 │         └─────────────────────────────────────┘            │
 │                                                             │
-│  📱 Multi-Device Sync                                       │
-│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -367,11 +365,12 @@ The following features are planned but not yet implemented:
 │                    ●  ●  ○  ○  ○                            │
 │                                                             │
 │                                                             │
-│              (−)        ▶️         (+)                      │
-│             round    RESUME      round                      │
+│              (skip)      ▶️        (stop)                   │
+│               ⏭️      RESUME        ⏹️                      │
 │                                                             │
-│                        ⏹️                                   │
-│                       stop                                  │
+│               [− Round]    [+ Round]                        │
+│                                                             │
+│   🔊 Sound On                                               │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -517,6 +516,12 @@ The following features are planned but not yet implemented:
 - Distinct sounds for work/rest/complete transitions
 - Warning beeps at 10 seconds before transition
 - Mute toggle persists during session
+
+### Session Flow
+- 10-second "GET READY" countdown before first round
+- Work → Rest → Work → Rest... progression
+- **Final round has no rest period** - session completes immediately after final work
+- Total time calculation: `(work × rounds) + (rest × (rounds - 1))`
 
 ---
 
