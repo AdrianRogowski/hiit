@@ -93,7 +93,7 @@ Then I should see the countdown in large text (readable from 10+ feet)
 And the screen should have a work-state color theme (coral-orange)
 And I should see "WORK" indicator
 And I should see "Round 1 of 5" progress indicator
-And I should see overall session progress bar
+And I should see overall session progress bar (updates continuously every second)
 
 ### Scenario: Rest period display
 Given I am in an active timer session
@@ -505,11 +505,12 @@ The following features are planned but not yet implemented:
 | HIIT | 45s | 15s | 10 | High-intensity workout |
 | Tabata | 20s | 10s | 8 | Classic Tabata protocol |
 
-### Multi-Device Sync
-- Uses BroadcastChannel API for same-origin tab sync
-- Shareable URL encodes session config
-- QR code for easy mobile scanning
-- Device count updates in real-time
+### Progress Bar
+- Updates continuously every second (not just on round changes)
+- Smooth CSS transition animation (300ms ease-out)
+- Stays at 0% during "GET READY" countdown
+- Fills from 0% → 100% across the entire session
+- Color matches current phase (work/rest/paused)
 
 ### Sound System
 - Web Audio API for reliable playback
