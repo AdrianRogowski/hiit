@@ -20,7 +20,7 @@ Given I am on the timer setup screen
 When I set work duration to 30 minutes 0 seconds
 And I set rest duration to 30 minutes 0 seconds
 And I set total rounds to 5
-Then I should see the calculated total time of "5h"
+Then I should see the calculated total time of "4h 30m" (no rest on final round)
 And I should see a "Start Timer" button
 
 ### Scenario: Configure timer with seconds (for HIIT workouts)
@@ -258,7 +258,7 @@ The following features are planned but not yet implemented:
 │           ┌─────────────────────────────────┐               │
 │           │            ROUNDS               │               │
 │           │       [-]    5    [+]           │               │
-│           │         5h total                │               │
+│           │       4h 30m total              │               │
 │           └─────────────────────────────────┘               │
 │                                                             │
 │                        PRESETS                              │
@@ -421,8 +421,8 @@ The following features are planned but not yet implemented:
 │            │                                 │              │
 │            │     5 rounds completed          │              │
 │            │     2h 30m work time            │              │
-│            │     2h 30m rest time            │              │
-│            │     5h 00m total                │              │
+│            │     2h 00m rest time            │              │
+│            │     4h 30m total                │              │
 │            │                                 │              │
 │            └─────────────────────────────────┘              │
 │                                                             │
