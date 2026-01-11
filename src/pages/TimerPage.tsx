@@ -85,24 +85,36 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
     }
   }, [timer.state.phase, onComplete])
 
-  // Calculate progress
+  // Calculate progress (continuous update every second)
   const totalSessionTime = calculateTotalTime(
     config.workDuration,
     config.restDuration,
     config.totalRounds
   )
   const elapsedTime = (() => {
+    // Ready phase doesn't count toward session progress
+    if (timer.state.phase === 'ready') {
+      return 0
+    }
+    
     const completedRounds = timer.state.currentRound - 1
+    // Completed rounds include work + rest, except the final completed round has no rest
+    // But since we're calculating for completed rounds (before current), all have rest
     const completedTime = completedRounds * (config.workDuration + config.restDuration)
     
     let currentIntervalElapsed = 0
-    if (timer.state.phase === 'work' || timer.state.phase === 'paused') {
+    if (timer.state.phase === 'work') {
       currentIntervalElapsed = config.workDuration - timer.state.timeRemaining
     } else if (timer.state.phase === 'rest') {
       currentIntervalElapsed = config.workDuration + (config.restDuration - timer.state.timeRemaining)
+    } else if (timer.state.phase === 'paused') {
+      // When paused, we don't know if we were in work or rest, but timeRemaining tells us
+      // If timeRemaining > workDuration, we haven't started work yet (shouldn't happen)
+      // Otherwise, assume we're partway through work
+      currentIntervalElapsed = config.workDuration - timer.state.timeRemaining
     }
     
-    return completedTime + currentIntervalElapsed
+    return completedTime + Math.max(0, currentIntervalElapsed)
   })()
   const progress = Math.min(elapsedTime / totalSessionTime, 1)
 
