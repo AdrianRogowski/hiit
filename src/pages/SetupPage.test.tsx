@@ -30,6 +30,14 @@ describe('SetupPage', () => {
       expect(screen.getByText(/total/i)).toBeInTheDocument()
     })
 
+    it('shows calculated work time', () => {
+      render(<SetupPage onStart={() => {}} />)
+      
+      // Should show work time in addition to total time
+      // Default: 30min work × 5 rounds = 2h 30m work
+      expect(screen.getByText(/2h 30m work/i)).toBeInTheDocument()
+    })
+
     it('allows typing duration minutes', async () => {
       const user = userEvent.setup()
       

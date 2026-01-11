@@ -21,6 +21,7 @@ When I set work duration to 30 minutes 0 seconds
 And I set rest duration to 30 minutes 0 seconds
 And I set total rounds to 5
 Then I should see the calculated total time of "4h 30m" (no rest on final round)
+And I should see the total work time of "2h 30m"
 And I should see a "Start Timer" button
 
 ### Scenario: Configure timer with seconds (for HIIT workouts)
@@ -474,9 +475,10 @@ The following features are planned but not yet implemented:
 - `font-display` - Timer countdown numbers
 - `font-body` - All other text
 - Timer countdown sizes (responsive):
-  - Mobile: `text-7xl` (~4.5rem)
-  - Tablet (md): `text-[10rem]`
-  - Large (lg): `text-[14rem]`
+  - Mobile: `text-[5.5rem]` (88px)
+  - Small screens (sm): `text-[7rem]` (112px)
+  - Tablet (md): `text-[10rem]` (160px)
+  - Large (lg): `text-[14rem]` (224px)
 - `text-lg` to `text-2xl` - State labels (WORK/REST), responsive
 - `text-lg` - Round indicators
 
@@ -528,16 +530,17 @@ The following features are planned but not yet implemented:
 - Total time calculation: `(work × rounds) + (rest × (rounds - 1))`
 
 ### Responsive Layout
-Optimized for different screen sizes:
+Optimized for different screen sizes using `h-[100dvh]` for proper mobile viewport:
 
 | Breakpoint | Timer Size | Layout | Controls |
 |------------|------------|--------|----------|
-| Mobile (<768px) | ~4.5rem | Top-aligned, tight gaps | Compact (w-12/h-12) |
-| Tablet (768px+) | 10rem | Centered, normal gaps | Medium (w-20/h-20) |
-| Large (1024px+) | 14rem | Centered, spacious | Large (w-24/h-24) |
+| Mobile (<640px) | 5.5rem | Centered | w-14/h-14 secondary, w-20/h-20 primary |
+| Small (640px+) | 7rem | Centered | Same as mobile |
+| Tablet (768px+) | 10rem | Centered | w-16/h-16 secondary, w-24/h-24 primary |
+| Large (1024px+) | 14rem | Centered | w-18/h-18 secondary, w-28/h-28 primary |
 
-- Mobile: Content starts at top to ensure all elements (including sound toggle) are visible
-- Tablet/Desktop: Content vertically centered for balanced appearance
+- All sizes: Content vertically centered with sound toggle visible at bottom
+- Uses dynamic viewport height (`100dvh`) for proper mobile browser support
 - All sizes maintain readability from across a room
 
 ---
