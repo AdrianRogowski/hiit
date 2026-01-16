@@ -150,11 +150,14 @@ export function useSound(): UseSoundReturn {
 
   const playRestComplete = useCallback(() => {
     if (mutedRef.current) return
-    // Play 5 ascending beeps (rest ending - back to work!)
+    // Play 5 ascending beeps (rest ending - back to work!) + final higher bing
     const baseFreq = SOUND_FREQUENCIES['rest-complete']
     for (let i = 0; i < 5; i++) {
       setTimeout(() => playTone(baseFreq * (1 + i * 0.08), 120, 'triangle'), i * 150)
     }
+    // Extra higher bing at the end - perfect fifth
+    const finalBingTime = 5 * 150 + 300 // After last beep + noticeable pause
+    setTimeout(() => playTone(baseFreq * 1.5, 180, 'triangle'), finalBingTime)
   }, [])
 
   const playWarning = useCallback(() => {
