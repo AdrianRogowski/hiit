@@ -86,10 +86,11 @@ export function TimerPage({ config, onComplete, onStop }: TimerPageProps) {
   }, [timer.state.phase, onComplete])
 
   // Calculate progress (continuous update every second)
+  // Use timer.state.totalRounds so progress updates when rounds are added/removed
   const totalSessionTime = calculateTotalTime(
     config.workDuration,
     config.restDuration,
-    config.totalRounds
+    timer.state.totalRounds
   )
   const elapsedTime = (() => {
     // Ready phase doesn't count toward session progress

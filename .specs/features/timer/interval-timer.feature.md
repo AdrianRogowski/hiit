@@ -170,12 +170,14 @@ Given I am on round 3 of 5 and timer is paused
 When I tap "+Round"
 Then the total rounds should increase to 6
 And the display should update to "Round 3 of 6"
+And the progress bar should adjust to reflect the new total session time
 
 ### Scenario: Remove a round mid-session
 Given I am on round 3 of 5 and timer is paused
 When I tap "-Round"
 Then the total rounds should decrease to 4
 And the display should update to "Round 3 of 4"
+And the progress bar should adjust to reflect the new total session time
 
 ---
 
